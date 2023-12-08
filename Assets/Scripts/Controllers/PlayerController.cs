@@ -5,9 +5,16 @@ using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private float m_RangeAttack = 50f;
+    [SerializeField] private GameObject m_Bullet;
+    [SerializeField] float m_VelocityBullet = 4.0f;
+    private float m_ElapseBullet = 0;
+    private float m_CooldownBullet = 0.5f;
+    public float GetRangeAttack() { return m_RangeAttack; }
+
     private NavMeshAgent m_Agent;
     private Rigidbody m_Rigidbody;
-    private ObjectController m_ObjetTarget;
+    private GameObject m_Target;
     private List<TypeItem> items = new List<TypeItem>();
 
     void Start()
@@ -19,54 +26,123 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Move();
-        ActionObject();
+        if (Input.GetMouseButtonDown((int)MouseButton.Left)) MouseLeftClicDown();
+
+        if (m_Target != null) ActionTarget();
     }
 
-    private void Move()
+    private void MouseLeftClicDown()
     {
-        if (Input.GetMouseButtonDown((int)MouseButton.Left))
-        {
-            Ray rayFromCamera = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray rayFromCamera = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(rayFromCamera, out RaycastHit hitInfo))
+        if (Physics.Raycast(rayFromCamera, out RaycastHit hitInfo))
+        {
+            GameObject gameObjectHit = hitInfo.collider.gameObject;
+            switch (hitInfo.collider.tag)
             {
-                CheckObjetMouseClick(hitInfo);
-                m_Agent.SetDestination(hitInfo.point);
+                case GameParametres.TagName.OBJECT:
+                    Debug.Log("WE CLICK OBJECT");
+                    MouseClickObject(gameObjectHit);
+                    break;
+                case GameParametres.TagName.ENEMY:
+                    Debug.Log("WE CLICK ENEMY");
+                    TargetGameObject(gameObjectHit);
+                    break;
+                default:
+                    Debug.Log("WE CLICK NOTHING");
+                    MouseClickNothing();
+                    break;
+
+
             }
+            m_Agent.isStopped = false;
+            m_Agent.SetDestination(hitInfo.point);
         }
     }
 
-    private void CheckObjetMouseClick(RaycastHit hit)
+    private void MouseClickObject(GameObject gameObject)
     {
-        ObjectController objetTarget = hit.collider.gameObject.GetComponent<ObjectController>();
+        ObjectController objetTarget = gameObject.GetComponent<ObjectController>();
 
         if (objetTarget == null || objetTarget.IsOpened()) return;
 
-        Debug.Log("WE CLICK OBJECT");
+        
+        TargetGameObject(gameObject);
+        m_ElapseBullet = 0; // Restart elapsed bullet timer
+    }
 
-        m_ObjetTarget = objetTarget;
+    private void TargetGameObject(GameObject gameObject)
+    {
+        m_Target = gameObject;
+    }
+
+    private void MouseClickNothing()
+    {
+        m_Target = null;
+    }
+
+    private void ActionTarget()
+    {
+
+        if (m_Target.CompareTag(GameParametres.TagName.OBJECT)) ActionObject();
+        else if (m_Target.CompareTag(GameParametres.TagName.ENEMY)) AttackEnemy();
     }
 
     private void ActionObject()
     {
-        if (m_ObjetTarget == null || m_ObjetTarget.IsOpened()) return;
+        ObjectController objectTarget = m_Target.GetComponent<ObjectController>();
 
-        if (GetDistanceFromObjetSelected() <= m_ObjetTarget.GetDistanceInteraction())
+        if (objectTarget.IsOpened()) {
+            m_Target = null;
+            return;
+        }
+
+        if (GetDistanceFromObjetSelected() <= objectTarget.GetDistanceInteraction())
         {
 
             Debug.Log("WE ARE NEXT TO OBJECT");
-            TypeItem item = m_ObjetTarget.Open();
+            TypeItem item = objectTarget.Open();
 
             if (item != TypeItem.NONE) items.Add(item);
 
             // TODO maj HUD
-            m_ObjetTarget = null;
+            m_Target = null;
         }
+    }
+
+    private void AttackEnemy()
+    {
+        if (GetDistanceFromObjetSelected() <= m_RangeAttack)
+        {
+            Debug.Log("WE ARE NEXT TO ENEMY");
+            m_Agent.isStopped = true;
+            ShotTarget();
+        } else
+        {
+            m_Agent.isStopped = false;
+            m_Agent.SetDestination(m_Target.transform.position);
+        }
+    }
+
+    private void ShotTarget()
+    {
+        m_ElapseBullet -= Time.deltaTime;
+        if (m_ElapseBullet > 0) return;
+        m_ElapseBullet = m_CooldownBullet;
+
+        Vector3 directionToEnemy = GetDirectionToTarget();
+        GameObject bullet = Instantiate(m_Bullet, transform.position, Quaternion.identity);
+        bullet.GetComponent<BulletController>().SetTargetAndVelocity(m_Target.transform, m_VelocityBullet);
+        //bullet.GetComponent<Rigidbody>().AddForce(directionToEnemy * m_ForceBullet, ForceMode.Impulse);
+    }
+
+    private Vector3 GetDirectionToTarget()
+    {
+        return (m_Target.transform.position - transform.position).normalized;
     }
 
     private float GetDistanceFromObjetSelected()
     {
-        return Vector3.Distance(m_ObjetTarget.transform.position, transform.position);
+        return Vector3.Distance(m_Target.transform.position, transform.position);
     }
 }

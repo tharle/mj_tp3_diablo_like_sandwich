@@ -26,4 +26,10 @@ public class EnemyController : MonoBehaviour
     {
         m_Agent.SetDestination(m_Target.position);
     }
+
+    public void Die()
+    {
+        // TODO Add animation morte
+        Destroy(gameObject);
+    }
 }
