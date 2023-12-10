@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -15,7 +16,8 @@ public class PlayerController : MonoBehaviour
     private NavMeshAgent m_Agent;
     private Rigidbody m_Rigidbody;
     private GameObject m_Target;
-    private List<TypeItem> items = new List<TypeItem>();
+    private bool m_IsWithHam = false;
+    private bool m_IsWithBread = false;
 
     void Start()
     {
@@ -101,12 +103,26 @@ public class PlayerController : MonoBehaviour
         {
 
             Debug.Log("WE ARE NEXT TO OBJECT");
-            TypeItem item = objectTarget.Open();
-
-            if (item != TypeItem.NONE) items.Add(item);
+            GotItem(objectTarget.Open());
 
             // TODO maj HUD
             m_Target = null;
+        }
+    }
+
+    private void GotItem(TypeItem typeItem)
+    {
+        switch (typeItem)
+        {
+            case TypeItem.BREAD:
+                m_IsWithBread = true;
+                break;
+            case TypeItem.HAM:
+                m_IsWithBread = true;
+                break;
+            default: 
+                // do nothing
+                break;
         }
     }
 
