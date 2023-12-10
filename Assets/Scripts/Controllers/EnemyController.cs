@@ -17,9 +17,9 @@ public class EnemyController : MonoBehaviour
         MoveToTarget();
     }
 
-    void Update()
+    public void SetTarget(Transform target)
     {
-        
+        m_Target = target;
     }
 
     private void MoveToTarget()
