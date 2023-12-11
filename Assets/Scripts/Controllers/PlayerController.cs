@@ -9,7 +9,8 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float m_RangeAttack = 50f;
     [SerializeField] private GameObject m_Bullet;
-    [SerializeField] float m_VelocityBullet = 4.0f;
+    [SerializeField] private float m_VelocityBullet = 4.0f;
+    [SerializeField] private Transform m_CrossBow;
     private float m_ElapseBullet = 0;
     private float m_CooldownBullet = 0.1f;
     public float GetRangeAttack() { return m_RangeAttack; }
@@ -144,8 +145,8 @@ public class PlayerController : MonoBehaviour
         if (m_ElapseBullet > 0) return;
         m_ElapseBullet = m_CooldownBullet;
 
-        Vector3 directionToEnemy = GetDirectionToTarget();
-        GameObject bullet = Instantiate(m_Bullet, transform.position, Quaternion.identity);
+        transform.rotation = Quaternion.LookRotation(GetDirectionToTarget());
+        GameObject bullet = Instantiate(m_Bullet, m_CrossBow.position, Quaternion.identity);
         bullet.GetComponent<BulletController>().SetTargetAndVelocity(m_Target.transform, m_VelocityBullet);
 
         // TODO rotate player to face enemy

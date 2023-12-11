@@ -30,6 +30,7 @@ public class GameParametres
         public const string PLAYER_FLOAT_VELOCITY = "velocity";
         public const string PLAYER_TRIGGER_SHOOT = "shoot";
         public const string PLAYER_TRIGGER_INTERACT = "interact";
-        
+        public const string OBJECT_TRIGGER_OPEN = "open";
+
     }
 }
