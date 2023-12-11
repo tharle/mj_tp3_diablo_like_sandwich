@@ -7,6 +7,12 @@ public class ObjectController : MonoBehaviour
     [SerializeField] private float m_DistanceInteraction = 1f;
     [SerializeField] private TypeItem item;
     private bool m_IsOpened = false;
+    private Animator m_Animator;
+
+    private void Start()
+    {
+        m_Animator = GetComponent<Animator>();
+    }
 
     public float GetDistanceInteraction()
     {
@@ -25,7 +31,9 @@ public class ObjectController : MonoBehaviour
         m_IsOpened = true;
 
         Debug.Log("DO ACTION: " + name);
-        GetComponent<MeshRenderer>().material.color = Color.gray;
+        //GetComponent<MeshRenderer>().material.color = Color.gray;
+        m_Animator.SetTrigger(GameParametres.Animation.OBJECT_TRIGGER_OPEN);
+
         return item;
     }
 }

@@ -3,40 +3,44 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using static GameParametres;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float m_RangeAttack = 50f;
     [SerializeField] private GameObject m_Bullet;
-    [SerializeField] float m_VelocityBullet = 4.0f;
+    [SerializeField] private float m_VelocityBullet = 4.0f;
+    [SerializeField] private Transform m_CrossBow;
     private float m_ElapseBullet = 0;
-    private float m_CooldownBullet = 0.5f;
+    private float m_CooldownBullet = 0.1f;
     public float GetRangeAttack() { return m_RangeAttack; }
 
-    private NavMeshAgent m_Agent;
-    private Rigidbody m_Rigidbody;
     private GameObject m_Target;
     private bool m_IsWithHam = false;
     private bool m_IsWithBread = false;
 
+    private NavMeshAgent m_Agent;
+    private PlayerAnimation m_PlayerAnimation;
     void Start()
     {
-        m_Rigidbody = GetComponent<Rigidbody>();
         m_Agent = GetComponent<NavMeshAgent>();
+        m_PlayerAnimation = GetComponentInChildren<PlayerAnimation>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        m_PlayerAnimation.UpdatePlayerVelocity(m_Agent.velocity);
+
         if (Input.GetMouseButtonDown((int)MouseButton.Left)) MouseLeftClicDown();
 
         if (m_Target != null) ActionTarget();
+        //else m_Animation.Shoot(false);
     }
 
     private void MouseLeftClicDown()
     {
         Ray rayFromCamera = Camera.main.ScreenPointToRay(Input.mousePosition);
-
         if (Physics.Raycast(rayFromCamera, out RaycastHit hitInfo))
         {
             GameObject gameObjectHit = hitInfo.collider.gameObject;
@@ -101,8 +105,7 @@ public class PlayerController : MonoBehaviour
 
         if (GetDistanceFromObjetSelected() <= objectTarget.GetDistanceInteraction())
         {
-
-            Debug.Log("WE ARE NEXT TO OBJECT");
+            m_PlayerAnimation.Interract();
             GotItem(objectTarget.Open());
 
             // TODO maj HUD
@@ -130,13 +133,9 @@ public class PlayerController : MonoBehaviour
     {
         if (GetDistanceFromObjetSelected() <= m_RangeAttack)
         {
-            Debug.Log("WE ARE NEXT TO ENEMY");
+            m_PlayerAnimation.Shoot(true);
             m_Agent.isStopped = true;
             ShotTarget();
-        } else
-        {
-            m_Agent.isStopped = false;
-            m_Agent.SetDestination(m_Target.transform.position);
         }
     }
 
@@ -146,10 +145,13 @@ public class PlayerController : MonoBehaviour
         if (m_ElapseBullet > 0) return;
         m_ElapseBullet = m_CooldownBullet;
 
-        Vector3 directionToEnemy = GetDirectionToTarget();
-        GameObject bullet = Instantiate(m_Bullet, transform.position, Quaternion.identity);
+        transform.rotation = Quaternion.LookRotation(GetDirectionToTarget());
+        GameObject bullet = Instantiate(m_Bullet, m_CrossBow.position, Quaternion.identity);
         bullet.GetComponent<BulletController>().SetTargetAndVelocity(m_Target.transform, m_VelocityBullet);
-        //bullet.GetComponent<Rigidbody>().AddForce(directionToEnemy * m_ForceBullet, ForceMode.Impulse);
+
+        // TODO rotate player to face enemy
+
+        m_Target = null;
     }
 
     private Vector3 GetDirectionToTarget()
