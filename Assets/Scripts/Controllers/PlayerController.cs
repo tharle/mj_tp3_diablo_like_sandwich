@@ -18,13 +18,22 @@ public class PlayerController : MonoBehaviour
     private GameObject m_Target;
     private bool m_IsWithHam = false;
     private bool m_IsWithBread = false;
+    private bool m_IsGameRunning = false;
 
     private NavMeshAgent m_Agent;
     private PlayerAnimation m_PlayerAnimation;
+    private TableSandwichController m_TableSandwich;
+    private EnemySpawner m_EnemySpawner;
+    private float m_TimerToSuiver = GameParametres.Values.TIME_TO_SUIVIVE_IN_SECONDS;
+
+
+
     void Start()
     {
         m_Agent = GetComponent<NavMeshAgent>();
         m_PlayerAnimation = GetComponentInChildren<PlayerAnimation>();
+        m_TableSandwich = FindAnyObjectByType<TableSandwichController>();
+        m_EnemySpawner = FindAnyObjectByType<EnemySpawner>();
     }
 
     // Update is called once per frame
@@ -35,7 +44,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown((int)MouseButton.Left)) MouseLeftClicDown();
 
         if (m_Target != null) ActionTarget();
-        //else m_Animation.Shoot(false);
+
+        if (m_IsGameRunning) ActionRunningGame();
     }
 
     private void MouseLeftClicDown()
@@ -47,19 +57,16 @@ public class PlayerController : MonoBehaviour
             switch (hitInfo.collider.tag)
             {
                 case GameParametres.TagName.OBJECT:
-                    Debug.Log("WE CLICK OBJECT");
                     MouseClickObject(gameObjectHit);
                     break;
                 case GameParametres.TagName.ENEMY:
-                    Debug.Log("WE CLICK ENEMY");
+                case GameParametres.TagName.TABLE:
+                    TargetGameObject(gameObjectHit);
                     TargetGameObject(gameObjectHit);
                     break;
                 default:
-                    Debug.Log("WE CLICK NOTHING");
                     MouseClickNothing();
                     break;
-
-
             }
             m_Agent.isStopped = false;
             m_Agent.SetDestination(hitInfo.point);
@@ -89,44 +96,68 @@ public class PlayerController : MonoBehaviour
 
     private void ActionTarget()
     {
-
         if (m_Target.CompareTag(GameParametres.TagName.OBJECT)) ActionObject();
         else if (m_Target.CompareTag(GameParametres.TagName.ENEMY)) AttackEnemy();
+        else if (m_Target.CompareTag(GameParametres.TagName.TABLE)) InteractTable();
     }
 
     private void ActionObject()
     {
         ObjectController objectTarget = m_Target.GetComponent<ObjectController>();
 
-        if (objectTarget.IsOpened()) {
-            m_Target = null;
-            return;
-        }
+        
 
         if (GetDistanceFromObjetSelected() <= objectTarget.GetDistanceInteraction())
         {
+            m_Agent.isStopped = true;
+
+            if (objectTarget.IsOpened())
+            {
+                m_Target = null;
+                return;
+            }
+
             m_PlayerAnimation.Interract();
-            GotItem(objectTarget.Open());
+            InteractObject(objectTarget.Open());
 
             // TODO maj HUD
             m_Target = null;
         }
     }
 
-    private void GotItem(TypeItem typeItem)
+    private void InteractObject(TypeItem type)
     {
-        switch (typeItem)
+        Debug.Log(" OBJECT INTERRACT!! " + type);
+        switch (type)
         {
             case TypeItem.BREAD:
                 m_IsWithBread = true;
                 break;
             case TypeItem.HAM:
-                m_IsWithBread = true;
+                m_IsWithHam = true;
                 break;
             default: 
                 // do nothing
                 break;
         }
+    }
+
+    private void InteractTable()
+    {
+        if (GetDistanceFromObjetSelected() > m_TableSandwich.GetDistanceInteraction()) return;
+
+        m_Agent.isStopped = true;
+
+        if (!m_IsWithBread || !m_IsWithHam) {
+            m_Target = null;
+            return;
+        }
+
+        m_PlayerAnimation.Interract();
+        m_TableSandwich.ServeSandwich();
+        m_EnemySpawner.Run();
+        m_IsGameRunning = true;
+        m_Target = null;
     }
 
     private void AttackEnemy()
@@ -153,6 +184,20 @@ public class PlayerController : MonoBehaviour
 
         m_Target = null;
     }
+
+    private void ActionRunningGame()
+    {
+        m_TimerToSuiver -= Time.deltaTime;
+        if(m_TimerToSuiver <= 0)
+        {
+            m_TimerToSuiver = 0;
+            m_IsGameRunning = false;
+            Time.timeScale = 0; // pause game
+            // TODO WIN GAME
+            Debug.Log("WIN GAME");
+        }
+    }
+
 
     private Vector3 GetDirectionToTarget()
     {

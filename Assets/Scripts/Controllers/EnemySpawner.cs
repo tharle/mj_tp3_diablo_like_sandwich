@@ -23,8 +23,7 @@ public class EnemySpawner : MonoBehaviour
         if (m_ElapseTime < m_Delay) return;
         m_ElapseTime = 0;
 
-        GameObject enemy = Instantiate(m_EnemyPrefab, GetRandomSpot(), transform.rotation);
-        enemy.GetComponent<EnemyController>().SetTarget(m_Target);
+       Instantiate(m_EnemyPrefab, GetRandomSpot(), transform.rotation);
     }
 
     private Vector3 GetRandomSpot()

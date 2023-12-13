@@ -2,7 +2,12 @@
 
 public class GameParametres
 {
-
+    public class Values {
+        public const int TIME_TO_SUIVIVE_IN_SECONDS = 60;
+        public const float ENEMY_HUNGER_MIN = 5F;
+        public const float ENEMY_HUNGER_MAX = 10f;
+        public const float ENEMY_COOLDOWN_BITE = 1f;
+    }
     public class InputName
     {
         public const string AXIS_HORIZONTAL = "Horizontal";
@@ -19,11 +24,11 @@ public class GameParametres
         public const string SCENE_5 = "Scene5";
     }
     public class TagName {
-        public const string GROUND = "Ground";
-        public const string PLAYER = "Player";
         public const string ENEMY = "Enemy";
+        public const string GROUND = "Ground";
         public const string OBJECT = "Object";
-
+        public const string PLAYER = "Player";
+        public const string TABLE = "Table";
     }
 
     public class Animation {
