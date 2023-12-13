@@ -19,11 +19,11 @@ public class GameParametres
         public const string SCENE_5 = "Scene5";
     }
     public class TagName {
-        public const string GROUND = "Ground";
-        public const string PLAYER = "Player";
         public const string ENEMY = "Enemy";
+        public const string GROUND = "Ground";
         public const string OBJECT = "Object";
-
+        public const string PLAYER = "Player";
+        public const string TABLE = "Table";
     }
 
     public class Animation {

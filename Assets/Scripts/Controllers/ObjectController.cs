@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ObjectController : MonoBehaviour
 {
-    [SerializeField] private float m_DistanceInteraction = 1f;
+    [SerializeField] private float m_DistanceInteraction = 2f;
     [SerializeField] private TypeItem item;
     private bool m_IsOpened = false;
     private Animator m_Animator;
@@ -31,8 +31,7 @@ public class ObjectController : MonoBehaviour
         m_IsOpened = true;
 
         Debug.Log("DO ACTION: " + name);
-        //GetComponent<MeshRenderer>().material.color = Color.gray;
-        m_Animator.SetTrigger(GameParametres.Animation.OBJECT_TRIGGER_OPEN);
+        if(m_Animator) m_Animator.SetTrigger(GameParametres.Animation.OBJECT_TRIGGER_OPEN);
 
         return item;
     }

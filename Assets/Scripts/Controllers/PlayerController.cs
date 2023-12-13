@@ -21,10 +21,14 @@ public class PlayerController : MonoBehaviour
 
     private NavMeshAgent m_Agent;
     private PlayerAnimation m_PlayerAnimation;
+    private TableSandwichController m_TableSandwich;
+    private EnemySpawner m_EnemySpawner;
     void Start()
     {
         m_Agent = GetComponent<NavMeshAgent>();
         m_PlayerAnimation = GetComponentInChildren<PlayerAnimation>();
+        m_TableSandwich = FindAnyObjectByType<TableSandwichController>();
+        m_EnemySpawner = FindAnyObjectByType<EnemySpawner>();
     }
 
     // Update is called once per frame
@@ -47,19 +51,16 @@ public class PlayerController : MonoBehaviour
             switch (hitInfo.collider.tag)
             {
                 case GameParametres.TagName.OBJECT:
-                    Debug.Log("WE CLICK OBJECT");
                     MouseClickObject(gameObjectHit);
                     break;
                 case GameParametres.TagName.ENEMY:
-                    Debug.Log("WE CLICK ENEMY");
+                case GameParametres.TagName.TABLE:
+                    TargetGameObject(gameObjectHit);
                     TargetGameObject(gameObjectHit);
                     break;
                 default:
-                    Debug.Log("WE CLICK NOTHING");
                     MouseClickNothing();
                     break;
-
-
             }
             m_Agent.isStopped = false;
             m_Agent.SetDestination(hitInfo.point);
@@ -89,44 +90,67 @@ public class PlayerController : MonoBehaviour
 
     private void ActionTarget()
     {
-
         if (m_Target.CompareTag(GameParametres.TagName.OBJECT)) ActionObject();
         else if (m_Target.CompareTag(GameParametres.TagName.ENEMY)) AttackEnemy();
+        else if (m_Target.CompareTag(GameParametres.TagName.TABLE)) InteractTable();
     }
 
     private void ActionObject()
     {
         ObjectController objectTarget = m_Target.GetComponent<ObjectController>();
 
-        if (objectTarget.IsOpened()) {
-            m_Target = null;
-            return;
-        }
+        
 
         if (GetDistanceFromObjetSelected() <= objectTarget.GetDistanceInteraction())
         {
+            m_Agent.isStopped = true;
+
+            if (objectTarget.IsOpened())
+            {
+                m_Target = null;
+                return;
+            }
+
             m_PlayerAnimation.Interract();
-            GotItem(objectTarget.Open());
+            InteractObject(objectTarget.Open());
 
             // TODO maj HUD
             m_Target = null;
         }
     }
 
-    private void GotItem(TypeItem typeItem)
+    private void InteractObject(TypeItem type)
     {
-        switch (typeItem)
+        Debug.Log(" OBJECT INTERRACT!! " + type);
+        switch (type)
         {
             case TypeItem.BREAD:
                 m_IsWithBread = true;
                 break;
             case TypeItem.HAM:
-                m_IsWithBread = true;
+                m_IsWithHam = true;
                 break;
             default: 
                 // do nothing
                 break;
         }
+    }
+
+    private void InteractTable()
+    {
+        if (GetDistanceFromObjetSelected() > m_TableSandwich.GetDistanceInteraction()) return;
+
+        m_Agent.isStopped = true;
+
+        if (!m_IsWithBread || !m_IsWithHam) {
+            m_Target = null;
+            return;
+        }
+
+        m_PlayerAnimation.Interract();
+        m_TableSandwich.ServeSandwich();
+        m_EnemySpawner.Run();
+        m_Target = null;
     }
 
     private void AttackEnemy()
