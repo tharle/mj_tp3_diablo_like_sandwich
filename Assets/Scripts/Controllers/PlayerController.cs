@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        m_PlayerAnimation.UpdatePlayerVelocity(m_Agent.velocity);
+        m_PlayerAnimation.UpdateVelocity(m_Agent.velocity);
 
         if (Input.GetMouseButtonDown((int)MouseButton.Left)) MouseLeftClicDown();
 
@@ -164,7 +164,7 @@ public class PlayerController : MonoBehaviour
     {
         if (GetDistanceFromObjetSelected() <= m_RangeAttack)
         {
-            m_PlayerAnimation.Shoot(true);
+            m_PlayerAnimation.Shoot();
             m_Agent.isStopped = true;
             ShotTarget();
         }
