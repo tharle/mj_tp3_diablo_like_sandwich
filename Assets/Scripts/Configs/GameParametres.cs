@@ -32,6 +32,10 @@ public class GameParametres
     }
 
     public class Animation {
+
+        public const string ENEMY_FLOAT_VELOCITY = "velocity";
+        public const string ENEMY_TRIGGER_ATTACK = "attack";
+        public const string ENEMY_TRIGGER_DIE = "die";
         public const string PLAYER_FLOAT_VELOCITY = "velocity";
         public const string PLAYER_TRIGGER_SHOOT = "shoot";
         public const string PLAYER_TRIGGER_INTERACT = "interact";
