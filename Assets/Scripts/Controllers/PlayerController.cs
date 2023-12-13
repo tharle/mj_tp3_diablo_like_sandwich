@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     private PlayerAnimation m_PlayerAnimation;
     private TableSandwichController m_TableSandwich;
     private EnemySpawner m_EnemySpawner;
-    private QuestHudManager m_QuestHudManager;
+    private GameHudManager m_GameHudManager;
     private float m_TimerToSuiver = GameParametres.Values.TIME_TO_SUIVIVE_IN_SECONDS;
 
 
@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
         m_PlayerAnimation = GetComponentInChildren<PlayerAnimation>();
         m_TableSandwich = FindAnyObjectByType<TableSandwichController>();
         m_EnemySpawner = FindAnyObjectByType<EnemySpawner>();
-        m_QuestHudManager = FindAnyObjectByType<QuestHudManager>();
+        m_GameHudManager = FindAnyObjectByType<GameHudManager>();
     }
 
     // Update is called once per frame
@@ -131,18 +131,18 @@ public class PlayerController : MonoBehaviour
         {
             case TypeItem.BREAD:
                 m_IsWithBread = true;
-                m_QuestHudManager.NotifyGotBread();
+                m_GameHudManager.NotifyQuest1GotBread();
                 break;
             case TypeItem.HAM:
                 m_IsWithHam = true;
-                m_QuestHudManager.NotifyGotHam();
+                m_GameHudManager.NotifyQuest1GotHam();
                 break;
             default: 
                 // do nothing
                 break;
         }
 
-       if(m_IsWithBread && m_IsWithHam) m_QuestHudManager.NotifyFinishQuest1();
+       if(m_IsWithBread && m_IsWithHam) m_GameHudManager.NotifyQuest1Finish();
     }
 
     private void InteractTable()
@@ -158,7 +158,7 @@ public class PlayerController : MonoBehaviour
 
         m_PlayerAnimation.Interract();
         m_TableSandwich.ServeSandwich();
-        m_QuestHudManager.NotifyFinishQuest2();
+        m_GameHudManager.NotifyQuest2Finish();
         m_EnemySpawner.Run();
         m_IsGameRunning = true;
         m_Target = null;
@@ -200,6 +200,7 @@ public class PlayerController : MonoBehaviour
             // TODO WIN GAME
             Debug.Log("WIN GAME");
         }
+        m_GameHudManager.NotifyTimer(m_TimerToSuiver);
     }
 
 
