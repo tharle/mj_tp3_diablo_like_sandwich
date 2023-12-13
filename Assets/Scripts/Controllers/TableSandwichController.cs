@@ -25,5 +25,14 @@ public class TableSandwichController : MonoBehaviour
     public void EatSandwich(float damage)
     {
         m_LifeSandwich -= damage;
+
+        if (m_LifeSandwich <= 0) GameOver();
+    }
+
+    private void GameOver()
+    {
+        Time.timeScale = 0;
+        // TODO call game over screen
+        Debug.Log("GAME OVER");
     }
 }

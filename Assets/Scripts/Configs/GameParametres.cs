@@ -2,7 +2,12 @@
 
 public class GameParametres
 {
-
+    public class Values {
+        public const int TIME_TO_SUIVIVE_IN_SECONDS = 60;
+        public const float ENEMY_HUNGER_MIN = 5F;
+        public const float ENEMY_HUNGER_MAX = 10f;
+        public const float ENEMY_COOLDOWN_BITE = 1f;
+    }
     public class InputName
     {
         public const string AXIS_HORIZONTAL = "Horizontal";

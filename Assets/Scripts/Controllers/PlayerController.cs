@@ -18,11 +18,16 @@ public class PlayerController : MonoBehaviour
     private GameObject m_Target;
     private bool m_IsWithHam = false;
     private bool m_IsWithBread = false;
+    private bool m_IsGameRunning = false;
 
     private NavMeshAgent m_Agent;
     private PlayerAnimation m_PlayerAnimation;
     private TableSandwichController m_TableSandwich;
     private EnemySpawner m_EnemySpawner;
+    private float m_TimerToSuiver = GameParametres.Values.TIME_TO_SUIVIVE_IN_SECONDS;
+
+
+
     void Start()
     {
         m_Agent = GetComponent<NavMeshAgent>();
@@ -39,7 +44,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonDown((int)MouseButton.Left)) MouseLeftClicDown();
 
         if (m_Target != null) ActionTarget();
-        //else m_Animation.Shoot(false);
+
+        if (m_IsGameRunning) ActionRunningGame();
     }
 
     private void MouseLeftClicDown()
@@ -150,6 +156,7 @@ public class PlayerController : MonoBehaviour
         m_PlayerAnimation.Interract();
         m_TableSandwich.ServeSandwich();
         m_EnemySpawner.Run();
+        m_IsGameRunning = true;
         m_Target = null;
     }
 
@@ -177,6 +184,20 @@ public class PlayerController : MonoBehaviour
 
         m_Target = null;
     }
+
+    private void ActionRunningGame()
+    {
+        m_TimerToSuiver -= Time.deltaTime;
+        if(m_TimerToSuiver <= 0)
+        {
+            m_TimerToSuiver = 0;
+            m_IsGameRunning = false;
+            Time.timeScale = 0; // pause game
+            // TODO WIN GAME
+            Debug.Log("WIN GAME");
+        }
+    }
+
 
     private Vector3 GetDirectionToTarget()
     {
