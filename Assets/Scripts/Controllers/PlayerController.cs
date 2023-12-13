@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private PlayerAnimation m_PlayerAnimation;
     private TableSandwichController m_TableSandwich;
     private EnemySpawner m_EnemySpawner;
+    private QuestHudManager m_QuestHudManager;
     private float m_TimerToSuiver = GameParametres.Values.TIME_TO_SUIVIVE_IN_SECONDS;
 
 
@@ -34,6 +35,7 @@ public class PlayerController : MonoBehaviour
         m_PlayerAnimation = GetComponentInChildren<PlayerAnimation>();
         m_TableSandwich = FindAnyObjectByType<TableSandwichController>();
         m_EnemySpawner = FindAnyObjectByType<EnemySpawner>();
+        m_QuestHudManager = FindAnyObjectByType<QuestHudManager>();
     }
 
     // Update is called once per frame
@@ -105,8 +107,6 @@ public class PlayerController : MonoBehaviour
     {
         ObjectController objectTarget = m_Target.GetComponent<ObjectController>();
 
-        
-
         if (GetDistanceFromObjetSelected() <= objectTarget.GetDistanceInteraction())
         {
             m_Agent.isStopped = true;
@@ -120,7 +120,6 @@ public class PlayerController : MonoBehaviour
             m_PlayerAnimation.Interract();
             InteractObject(objectTarget.Open());
 
-            // TODO maj HUD
             m_Target = null;
         }
     }
@@ -132,14 +131,18 @@ public class PlayerController : MonoBehaviour
         {
             case TypeItem.BREAD:
                 m_IsWithBread = true;
+                m_QuestHudManager.NotifyGotBread();
                 break;
             case TypeItem.HAM:
                 m_IsWithHam = true;
+                m_QuestHudManager.NotifyGotHam();
                 break;
             default: 
                 // do nothing
                 break;
         }
+
+       if(m_IsWithBread && m_IsWithHam) m_QuestHudManager.NotifyFinishQuest1();
     }
 
     private void InteractTable()
@@ -155,6 +158,7 @@ public class PlayerController : MonoBehaviour
 
         m_PlayerAnimation.Interract();
         m_TableSandwich.ServeSandwich();
+        m_QuestHudManager.NotifyFinishQuest2();
         m_EnemySpawner.Run();
         m_IsGameRunning = true;
         m_Target = null;

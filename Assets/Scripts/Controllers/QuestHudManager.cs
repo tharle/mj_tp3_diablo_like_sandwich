@@ -1,34 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class QuestHudManager : MonoBehaviour
 {
-    [SerializeField] private GameObject m_Quest1;
-    [SerializeField] private GameObject m_Quest1Bread;
-    [SerializeField] private GameObject m_Quest1Ham;
-    [SerializeField] private GameObject m_Quest2;
-    [SerializeField] private GameObject m_Quest3;
+    [SerializeField] private TextMeshProUGUI m_Quest1Title;
+    [SerializeField] private TextMeshProUGUI m_Quest1Bread;
+    [SerializeField] private TextMeshProUGUI m_Quest1Ham;
+    [SerializeField] private TextMeshProUGUI m_Quest2Title;
 
 
     public void NotifyGotHam() {
-        // TODO change color font Ham to gray
+        m_Quest1Ham.text = $"<s>{m_Quest1Ham.text}<s>";
     }
 
     public void NotifyGotBread()
     {
-        // TODO change color font Ham to gray
+        m_Quest1Bread.text = $"<s>{m_Quest1Bread.text}<s>";
     }
 
     public void NotifyFinishQuest1()
     {
-        // TODO change color font Q1 to gray
-        m_Quest2.SetActive(true);
+        m_Quest1Title.text = $"<s>{m_Quest1Title.text}<s>";
     }
 
     public void NotifyFinishQuest2()
     {
-        // TODO change color font Q2 to gray
-        m_Quest3.SetActive(true);
+        m_Quest2Title.text = $"<s>{m_Quest2Title.text}<s>";
     }
 }
