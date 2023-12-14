@@ -3994,6 +3994,7 @@ MonoBehaviour:
   m_Timer: {fileID: 755452968}
   m_SandwichHP: {fileID: 334356351}
   m_GameOverScreen: {fileID: 1491568222}
+  m_WinScreen: {fileID: 428577913}
 --- !u!1 &786473783
 GameObject:
   m_ObjectHideFlags: 0
@@ -7025,7 +7026,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1491568223
 RectTransform:
   m_ObjectHideFlags: 0
