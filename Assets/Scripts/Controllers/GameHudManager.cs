@@ -15,6 +15,8 @@ public class GameHudManager : MonoBehaviour
     [SerializeField] private GameObject m_SandwichHP;
 
     [SerializeField] private GameObject m_GameOverScreen;
+    [SerializeField] private GameObject m_WinScreen;
+    
     private Slider m_SandwichHPSlider;
 
     private void Start()
@@ -56,5 +58,10 @@ public class GameHudManager : MonoBehaviour
     public void ShowGameOverScreen()
     {
         m_GameOverScreen.SetActive(true);
+    }
+
+    public void ShowWinScreen()
+    {
+        m_WinScreen.SetActive(true);
     }
 }

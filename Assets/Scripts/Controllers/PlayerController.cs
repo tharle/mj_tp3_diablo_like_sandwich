@@ -209,9 +209,8 @@ public class PlayerController : MonoBehaviour
         {
             m_TimerToSuiver = 0;
             m_IsGameRunning = false;
-            Time.timeScale = 0; // pause game
-            // TODO WIN GAME
-            Debug.Log("WIN GAME");
+            Time.timeScale = 0;
+            m_GameHudManager.ShowWinScreen();
         }
         m_GameHudManager.NotifyTimer(m_TimerToSuiver);
     }

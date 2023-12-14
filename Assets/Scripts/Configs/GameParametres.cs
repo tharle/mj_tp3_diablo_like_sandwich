@@ -16,7 +16,7 @@ public class GameParametres
     public class SceneName
     {
         public const string SCENE_GAME = "Game";
-        public const string SCENE_MENU = "Game";
+        public const string SCENE_MENU = "Menu";
     }
     public class TagName {
         public const string ENEMY = "Enemy";
