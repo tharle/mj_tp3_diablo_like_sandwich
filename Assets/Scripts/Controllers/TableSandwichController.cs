@@ -5,9 +5,10 @@ using UnityEngine;
 public class TableSandwichController : MonoBehaviour
 {
     [SerializeField] private GameObject m_Sandwich;
+    [SerializeField] private float m_DistanceInteraction = 1f;
     [SerializeField] private float m_LifeSandwich = 100;
     private float m_LifeSandwichCurrent;
-    [SerializeField] private float m_DistanceInteraction = 1f;
+    private bool m_IsServedSandwich = false;
 
     [SerializeField] private GameHudManager m_HudManager;
 
@@ -25,6 +26,11 @@ public class TableSandwichController : MonoBehaviour
     public void ServeSandwich()
     {
         m_Sandwich.SetActive(true);
+        m_IsServedSandwich = true;
+    }
+
+    public bool IsServedSandwich() {
+        return m_IsServedSandwich;
     }
 
     public void EatSandwich(float damage)

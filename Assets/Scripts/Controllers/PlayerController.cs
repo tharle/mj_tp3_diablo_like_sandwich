@@ -158,7 +158,7 @@ public class PlayerController : MonoBehaviour
 
         m_Agent.isStopped = true;
 
-        if (!m_IsWithBread || !m_IsWithHam) {
+        if (!IsWithAllIngrients()) {
             m_Target = null;
             return;
         }
@@ -169,6 +169,11 @@ public class PlayerController : MonoBehaviour
         m_EnemySpawner.Run();
         m_IsGameRunning = true;
         m_Target = null;
+    }
+
+    public bool IsWithAllIngrients() 
+    {
+        return m_IsWithBread && m_IsWithHam;
     }
 
     private void AttackEnemy()
