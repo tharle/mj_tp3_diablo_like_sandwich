@@ -27,7 +27,8 @@ public class PlayerController : MonoBehaviour
     private GameHudManager m_GameHudManager;
     private float m_TimerToSuiver = GameParametres.Values.TIME_TO_SUIVIVE_IN_SECONDS;
 
-
+    [SerializeField] AudioSource m_AudioQuestItem;
+    [SerializeField] AudioSource m_AudioQuestFinish;
 
     void Start()
     {
@@ -137,17 +138,23 @@ public class PlayerController : MonoBehaviour
             case TypeItem.BREAD:
                 m_IsWithBread = true;
                 m_GameHudManager.NotifyQuest1GotBread();
+                m_AudioQuestItem.Play();
                 break;
             case TypeItem.HAM:
                 m_IsWithHam = true;
                 m_GameHudManager.NotifyQuest1GotHam();
+                m_AudioQuestItem.Play();
                 break;
             default: 
                 // do nothing
                 break;
         }
 
-       if(m_IsWithBread && m_IsWithHam) m_GameHudManager.NotifyQuest1Finish();
+        if (m_IsWithBread && m_IsWithHam) 
+        {
+            m_AudioQuestFinish.Play();
+            m_GameHudManager.NotifyQuest1Finish();
+        } 
     }
 
     private void InteractTable()
@@ -156,13 +163,14 @@ public class PlayerController : MonoBehaviour
 
         m_Agent.isStopped = true;
 
-        if (!IsWithAllIngrients()) 
+        if (!IsWithAllIngrients() || m_TableSandwich.IsServedSandwich()) 
         {
             m_Target = null;
             return;
         }
 
         m_PlayerAnimation.Interract();
+        m_AudioQuestFinish.Play();
         m_TableSandwich.ServeSandwich();
         m_GameHudManager.NotifyQuest2Finish();
         m_EnemySpawner.Run();
