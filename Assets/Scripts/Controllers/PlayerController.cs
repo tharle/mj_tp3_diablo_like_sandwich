@@ -38,7 +38,6 @@ public class PlayerController : MonoBehaviour
         m_GameHudManager = FindAnyObjectByType<GameHudManager>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         m_PlayerAnimation.UpdateVelocity(m_Agent.velocity);
@@ -133,7 +132,6 @@ public class PlayerController : MonoBehaviour
 
     private void InteractObject(TypeItem type)
     {
-        Debug.Log(" OBJECT INTERRACT!! " + type);
         switch (type)
         {
             case TypeItem.BREAD:
@@ -158,7 +156,8 @@ public class PlayerController : MonoBehaviour
 
         m_Agent.isStopped = true;
 
-        if (!IsWithAllIngrients()) {
+        if (!IsWithAllIngrients()) 
+        {
             m_Target = null;
             return;
         }

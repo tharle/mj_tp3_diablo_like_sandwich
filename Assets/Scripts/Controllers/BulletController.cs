@@ -14,12 +14,12 @@ public class BulletController : MonoBehaviour
     private Transform m_Target;
     private float m_Velocity;
 
-    public void SetTargetAndVelocity(Transform target, float velocity) {  
+    public void SetTargetAndVelocity(Transform target, float velocity) 
+    {  
         m_Target = target;
         m_Velocity = velocity;
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         m_StartPosition = transform.position;
@@ -56,8 +56,6 @@ public class BulletController : MonoBehaviour
 
         return vectorToTarget.normalized;
     }
-
-
 
     private void OnTriggerEnter(Collider other)
     {

@@ -18,6 +18,7 @@ public class TableSandwichController : MonoBehaviour
         m_Sandwich.SetActive(false);
         m_LifeSandwichCurrent = m_LifeSandwich;
     }
+    
     public float GetDistanceInteraction()
     {
         return m_DistanceInteraction;
@@ -29,7 +30,8 @@ public class TableSandwichController : MonoBehaviour
         m_IsServedSandwich = true;
     }
 
-    public bool IsServedSandwich() {
+    public bool IsServedSandwich() 
+    {
         return m_IsServedSandwich;
     }
 

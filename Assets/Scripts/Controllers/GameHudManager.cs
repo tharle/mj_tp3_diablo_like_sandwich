@@ -24,7 +24,8 @@ public class GameHudManager : MonoBehaviour
         m_SandwichHP.SetActive(false);
     }
 
-    public void NotifyQuest1GotHam() {
+    public void NotifyQuest1GotHam() 
+    {
         m_Quest1Ham.text = $"<s>{m_Quest1Ham.text}<s>";
         m_SandwichHPSlider = m_SandwichHP.GetComponentInChildren<Slider>();
     }

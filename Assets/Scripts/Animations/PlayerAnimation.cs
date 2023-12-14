@@ -13,11 +13,13 @@ public class PlayerAnimation : MonoBehaviour
         m_Animator = GetComponent<Animator>();
     }
 
-    public void Shoot() {
+    public void Shoot() 
+    {
         m_Animator.SetTrigger(GameParametres.Animation.PLAYER_TRIGGER_SHOOT);
     }
 
-    public void Interract() {
+    public void Interract() 
+    {
         m_Animator.SetTrigger(GameParametres.Animation.PLAYER_TRIGGER_INTERACT);
     }
 

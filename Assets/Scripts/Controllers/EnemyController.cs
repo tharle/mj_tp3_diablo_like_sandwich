@@ -21,12 +21,12 @@ public class EnemyController : MonoBehaviour
         SetRandomHunger();
         MoveToTarget();
     }
+
     private void Update()
     {
         if (GetDistanceFromSandwich() <= m_TableSandwich.GetDistanceInteraction()) EatSandwich();
         else m_EnemyAnimation.UpdateVelocity(m_Agent.velocity);
     }
-
 
     private void MoveToTarget()
     {
@@ -41,7 +41,6 @@ public class EnemyController : MonoBehaviour
     {
         m_Hunger = Random.Range(GameParametres.Values.ENEMY_HUNGER_MIN, GameParametres.Values.ENEMY_HUNGER_MAX);
     }
-
 
     private void EatSandwich()
     {
@@ -66,7 +65,6 @@ public class EnemyController : MonoBehaviour
         return m_IsDead;
     }
 
-
     public void Die()
     {
         if (m_IsDead) return;
@@ -75,7 +73,6 @@ public class EnemyController : MonoBehaviour
         m_Agent.isStopped = true;
         StartCoroutine(DoDie());
     }
-
 
     private IEnumerator DoDie()
     {

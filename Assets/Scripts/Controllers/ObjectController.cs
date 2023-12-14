@@ -27,11 +27,9 @@ public class ObjectController : MonoBehaviour
     public TypeItem Open()
     {
         if (m_IsOpened) return TypeItem.NONE;
-
+        
         m_IsOpened = true;
-
-        Debug.Log("DO ACTION: " + name);
-        if(m_Animator) m_Animator.SetTrigger(GameParametres.Animation.OBJECT_TRIGGER_OPEN);
+        if (m_Animator) m_Animator.SetTrigger(GameParametres.Animation.OBJECT_TRIGGER_OPEN);
 
         return item;
     }
