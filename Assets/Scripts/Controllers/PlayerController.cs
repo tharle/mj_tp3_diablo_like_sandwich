@@ -31,7 +31,6 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        Time.timeScale = 1.0f;
         m_Agent = GetComponent<NavMeshAgent>();
         m_PlayerAnimation = GetComponentInChildren<PlayerAnimation>();
         m_TableSandwich = FindAnyObjectByType<TableSandwichController>();
@@ -183,11 +182,11 @@ public class PlayerController : MonoBehaviour
         {
             m_PlayerAnimation.Shoot();
             m_Agent.isStopped = true;
-            ShotTarget();
+            ShootTarget();
         }
     }
 
-    private void ShotTarget()
+    private void ShootTarget()
     {
         m_ElapseBullet -= Time.deltaTime;
         if (m_ElapseBullet > 0) return;
@@ -196,8 +195,6 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(GetDirectionToTarget());
         GameObject bullet = Instantiate(m_Bullet, m_CrossBow.position, Quaternion.identity);
         bullet.GetComponent<BulletController>().SetTargetAndVelocity(m_Target.transform, m_VelocityBullet);
-
-        // TODO rotate player to face enemy
 
         m_Target = null;
     }
