@@ -8659,6 +8659,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1705105619}
     m_Modifications:
+    - target: {fileID: 16643487780022298, guid: 093cbcae917ac5748a1cccf6d7b35ec4, type: 3}
+      propertyPath: m_DistanceInteraction
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2604169899182808371, guid: 093cbcae917ac5748a1cccf6d7b35ec4, type: 3}
       propertyPath: m_Name
       value: TableSandwich

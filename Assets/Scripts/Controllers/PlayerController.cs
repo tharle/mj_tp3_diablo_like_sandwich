@@ -62,8 +62,9 @@ public class PlayerController : MonoBehaviour
                     MouseClickObject(gameObjectHit);
                     break;
                 case GameParametres.TagName.ENEMY:
+                    MouseClickEnemy(gameObjectHit);
+                    break;
                 case GameParametres.TagName.TABLE:
-                    TargetGameObject(gameObjectHit);
                     TargetGameObject(gameObjectHit);
                     break;
                 default:
@@ -75,20 +76,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void MouseClickObject(GameObject gameObject)
+    private void MouseClickObject(GameObject gameObjectHit)
     {
-        ObjectController objetTarget = gameObject.GetComponent<ObjectController>();
+        ObjectController objetTarget = gameObjectHit.GetComponent<ObjectController>();
 
         if (objetTarget == null || objetTarget.IsOpened()) return;
 
         
-        TargetGameObject(gameObject);
+        TargetGameObject(gameObjectHit);
         m_ElapseBullet = 0; // Restart elapsed bullet timer
     }
 
-    private void TargetGameObject(GameObject gameObject)
+    private void MouseClickEnemy(GameObject gameObjectHit)
     {
-        m_Target = gameObject;
+        if(gameObjectHit.GetComponent<EnemyController>().IsDead()) return;
+        TargetGameObject(gameObjectHit);
+    }
+
+    private void TargetGameObject(GameObject gameObjectHit)
+    {
+        m_Target = gameObjectHit;
     }
 
     private void MouseClickNothing()
