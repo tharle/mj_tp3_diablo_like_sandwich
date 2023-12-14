@@ -13,6 +13,9 @@ public class EnemyController : MonoBehaviour
     private float m_ElapseAtack = 0;
     private bool m_IsDead = false;
 
+    [SerializeField] AudioSource m_AudioDie;
+    [SerializeField] AudioSource m_AudioEat;
+
     void Start()
     {
         m_Agent = GetComponent<NavMeshAgent>();
@@ -49,9 +52,10 @@ public class EnemyController : MonoBehaviour
         m_ElapseAtack += Time.deltaTime;
         if (m_ElapseAtack <= GameParametres.Values.ENEMY_COOLDOWN_BITE) return ;
         m_ElapseAtack = 0;
+
+        m_AudioEat.Play();
         m_Agent.isStopped = true;
         m_EnemyAnimation.Attack();
-
         m_TableSandwich.EatSandwich(m_Hunger);
     }
 
@@ -71,6 +75,7 @@ public class EnemyController : MonoBehaviour
 
         m_IsDead = true;
         m_Agent.isStopped = true;
+        m_AudioDie.Play();
         StartCoroutine(DoDie());
     }
 
