@@ -43,7 +43,7 @@ public class EnemyController : MonoBehaviour
         m_ElapseAtack += Time.deltaTime;
         if (m_ElapseAtack <= GameParametres.Values.ENEMY_COOLDOWN_BITE) return ;
         m_ElapseAtack = 0;
-
+        m_Agent.isStopped = true;
         m_EnemyAnimation.Attack();
 
         m_TableSandwich.EatSandwich(m_Hunger);
