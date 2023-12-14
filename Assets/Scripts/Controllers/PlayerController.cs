@@ -150,9 +150,8 @@ public class PlayerController : MonoBehaviour
                 break;
         }
 
-        if (m_IsWithBread && m_IsWithHam) 
+        if (m_IsWithBread && m_IsWithHam)
         {
-            m_AudioQuestFinish.Play();
             m_GameHudManager.NotifyQuest1Finish();
         } 
     }

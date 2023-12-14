@@ -16,7 +16,11 @@ public class GameHudManager : MonoBehaviour
 
     [SerializeField] private GameObject m_GameOverScreen;
     [SerializeField] private GameObject m_WinScreen;
-    
+
+    [SerializeField] private AudioSource m_AudioGame;
+    [SerializeField] private AudioSource m_AudioGameOver;
+    [SerializeField] private AudioSource m_AudioWin;
+
     private Slider m_SandwichHPSlider;
 
     private void Start()
@@ -58,11 +62,15 @@ public class GameHudManager : MonoBehaviour
 
     public void ShowGameOverScreen()
     {
+        m_AudioGame.Stop();
+        m_AudioGameOver.Play();
         m_GameOverScreen.SetActive(true);
     }
 
     public void ShowWinScreen()
     {
+        m_AudioGame.Stop();
+        m_AudioWin.Play();
         m_WinScreen.SetActive(true);
     }
 }
