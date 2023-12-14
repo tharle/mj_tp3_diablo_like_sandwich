@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        Time.timeScale = 1.0f;
         m_Agent = GetComponent<NavMeshAgent>();
         m_PlayerAnimation = GetComponentInChildren<PlayerAnimation>();
         m_TableSandwich = FindAnyObjectByType<TableSandwichController>();

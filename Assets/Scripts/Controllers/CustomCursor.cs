@@ -20,7 +20,7 @@ public class CustomCursor : MonoBehaviour
     private void Update()
     {
         transform.position = Input.mousePosition;
-        CheckMouseOver();
+        if(Time.timeScale > 0) CheckMouseOver();
     }
 
     private void CheckMouseOver()

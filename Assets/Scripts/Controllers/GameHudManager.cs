@@ -13,6 +13,8 @@ public class GameHudManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI m_Timer;
     [SerializeField] private GameObject m_SandwichHP;
+
+    [SerializeField] private GameObject m_GameOverScreen;
     private Slider m_SandwichHPSlider;
 
     private void Start()
@@ -49,5 +51,10 @@ public class GameHudManager : MonoBehaviour
     public void NotifySandwichHP(float percHPCurrent)
     {
         m_SandwichHPSlider.value = percHPCurrent;
+    }
+
+    public void ShowGameOverScreen()
+    {
+        m_GameOverScreen.SetActive(true);
     }
 }

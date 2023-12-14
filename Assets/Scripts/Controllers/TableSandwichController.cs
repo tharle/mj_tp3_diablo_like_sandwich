@@ -43,7 +43,6 @@ public class TableSandwichController : MonoBehaviour
     private void GameOver()
     {
         Time.timeScale = 0;
-        // TODO call game over screen
-        Debug.Log("GAME OVER");
+        m_HudManager.ShowGameOverScreen();
     }
 }
