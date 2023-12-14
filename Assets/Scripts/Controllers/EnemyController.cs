@@ -11,6 +11,7 @@ public class EnemyController : MonoBehaviour
     private TableSandwichController m_TableSandwich;
     private float m_Hunger;
     private float m_ElapseAtack = 0;
+    private bool m_IsDead = false;
 
     void Start()
     {
@@ -29,7 +30,11 @@ public class EnemyController : MonoBehaviour
 
     private void MoveToTarget()
     {
-        m_Agent.SetDestination(m_TableSandwich.transform.position);
+        // Prends un variation de 1 en X et 1 en Z pour eviter de les zombies attaquer juste un SPOT.
+        Vector3 position = m_TableSandwich.transform.position;
+        position.x += Random.Range(-1, 1);
+        position.z += Random.Range(-1, 1);
+        m_Agent.SetDestination(position);
     }
 
     private void SetRandomHunger()
@@ -40,10 +45,12 @@ public class EnemyController : MonoBehaviour
 
     private void EatSandwich()
     {
+        if (m_IsDead) return;
+
         m_ElapseAtack += Time.deltaTime;
         if (m_ElapseAtack <= GameParametres.Values.ENEMY_COOLDOWN_BITE) return ;
         m_ElapseAtack = 0;
-
+        m_Agent.isStopped = true;
         m_EnemyAnimation.Attack();
 
         m_TableSandwich.EatSandwich(m_Hunger);
@@ -54,9 +61,17 @@ public class EnemyController : MonoBehaviour
         return Vector3.Distance(m_TableSandwich.transform.position, transform.position);
     }
 
+    public bool IsDead()
+    {
+        return m_IsDead;
+    }
+
 
     public void Die()
     {
+        if (m_IsDead) return;
+
+        m_IsDead = true;
         m_Agent.isStopped = true;
         StartCoroutine(DoDie());
     }

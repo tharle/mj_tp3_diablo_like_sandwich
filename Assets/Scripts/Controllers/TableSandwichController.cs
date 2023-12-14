@@ -5,12 +5,18 @@ using UnityEngine;
 public class TableSandwichController : MonoBehaviour
 {
     [SerializeField] private GameObject m_Sandwich;
-    [SerializeField] private float m_LifeSandwich = 100;
     [SerializeField] private float m_DistanceInteraction = 1f;
+    [SerializeField] private float m_LifeSandwich = 100;
+    private float m_LifeSandwichCurrent;
+    private bool m_IsServedSandwich = false;
+
+    [SerializeField] private GameHudManager m_HudManager;
 
     private void Start()
     {
+        m_HudManager = FindAnyObjectByType<GameHudManager>();
         m_Sandwich.SetActive(false);
+        m_LifeSandwichCurrent = m_LifeSandwich;
     }
     public float GetDistanceInteraction()
     {
@@ -20,19 +26,23 @@ public class TableSandwichController : MonoBehaviour
     public void ServeSandwich()
     {
         m_Sandwich.SetActive(true);
+        m_IsServedSandwich = true;
+    }
+
+    public bool IsServedSandwich() {
+        return m_IsServedSandwich;
     }
 
     public void EatSandwich(float damage)
     {
-        m_LifeSandwich -= damage;
-
-        if (m_LifeSandwich <= 0) GameOver();
+        m_LifeSandwichCurrent -= damage;
+        m_HudManager.NotifySandwichHP(m_LifeSandwichCurrent / m_LifeSandwich);
+        if (m_LifeSandwichCurrent <= 0) GameOver();
     }
 
     private void GameOver()
     {
         Time.timeScale = 0;
-        // TODO call game over screen
-        Debug.Log("GAME OVER");
+        m_HudManager.ShowGameOverScreen();
     }
 }

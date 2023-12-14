@@ -24,16 +24,19 @@ public class PlayerController : MonoBehaviour
     private PlayerAnimation m_PlayerAnimation;
     private TableSandwichController m_TableSandwich;
     private EnemySpawner m_EnemySpawner;
+    private GameHudManager m_GameHudManager;
     private float m_TimerToSuiver = GameParametres.Values.TIME_TO_SUIVIVE_IN_SECONDS;
 
 
 
     void Start()
     {
+        Time.timeScale = 1.0f;
         m_Agent = GetComponent<NavMeshAgent>();
         m_PlayerAnimation = GetComponentInChildren<PlayerAnimation>();
         m_TableSandwich = FindAnyObjectByType<TableSandwichController>();
         m_EnemySpawner = FindAnyObjectByType<EnemySpawner>();
+        m_GameHudManager = FindAnyObjectByType<GameHudManager>();
     }
 
     // Update is called once per frame
@@ -60,8 +63,9 @@ public class PlayerController : MonoBehaviour
                     MouseClickObject(gameObjectHit);
                     break;
                 case GameParametres.TagName.ENEMY:
+                    MouseClickEnemy(gameObjectHit);
+                    break;
                 case GameParametres.TagName.TABLE:
-                    TargetGameObject(gameObjectHit);
                     TargetGameObject(gameObjectHit);
                     break;
                 default:
@@ -73,20 +77,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void MouseClickObject(GameObject gameObject)
+    private void MouseClickObject(GameObject gameObjectHit)
     {
-        ObjectController objetTarget = gameObject.GetComponent<ObjectController>();
+        ObjectController objetTarget = gameObjectHit.GetComponent<ObjectController>();
 
         if (objetTarget == null || objetTarget.IsOpened()) return;
 
         
-        TargetGameObject(gameObject);
+        TargetGameObject(gameObjectHit);
         m_ElapseBullet = 0; // Restart elapsed bullet timer
     }
 
-    private void TargetGameObject(GameObject gameObject)
+    private void MouseClickEnemy(GameObject gameObjectHit)
     {
-        m_Target = gameObject;
+        if(gameObjectHit.GetComponent<EnemyController>().IsDead()) return;
+        TargetGameObject(gameObjectHit);
+    }
+
+    private void TargetGameObject(GameObject gameObjectHit)
+    {
+        m_Target = gameObjectHit;
     }
 
     private void MouseClickNothing()
@@ -105,8 +115,6 @@ public class PlayerController : MonoBehaviour
     {
         ObjectController objectTarget = m_Target.GetComponent<ObjectController>();
 
-        
-
         if (GetDistanceFromObjetSelected() <= objectTarget.GetDistanceInteraction())
         {
             m_Agent.isStopped = true;
@@ -120,7 +128,6 @@ public class PlayerController : MonoBehaviour
             m_PlayerAnimation.Interract();
             InteractObject(objectTarget.Open());
 
-            // TODO maj HUD
             m_Target = null;
         }
     }
@@ -132,14 +139,18 @@ public class PlayerController : MonoBehaviour
         {
             case TypeItem.BREAD:
                 m_IsWithBread = true;
+                m_GameHudManager.NotifyQuest1GotBread();
                 break;
             case TypeItem.HAM:
                 m_IsWithHam = true;
+                m_GameHudManager.NotifyQuest1GotHam();
                 break;
             default: 
                 // do nothing
                 break;
         }
+
+       if(m_IsWithBread && m_IsWithHam) m_GameHudManager.NotifyQuest1Finish();
     }
 
     private void InteractTable()
@@ -148,16 +159,22 @@ public class PlayerController : MonoBehaviour
 
         m_Agent.isStopped = true;
 
-        if (!m_IsWithBread || !m_IsWithHam) {
+        if (!IsWithAllIngrients()) {
             m_Target = null;
             return;
         }
 
         m_PlayerAnimation.Interract();
         m_TableSandwich.ServeSandwich();
+        m_GameHudManager.NotifyQuest2Finish();
         m_EnemySpawner.Run();
         m_IsGameRunning = true;
         m_Target = null;
+    }
+
+    public bool IsWithAllIngrients() 
+    {
+        return m_IsWithBread && m_IsWithHam;
     }
 
     private void AttackEnemy()
@@ -192,10 +209,10 @@ public class PlayerController : MonoBehaviour
         {
             m_TimerToSuiver = 0;
             m_IsGameRunning = false;
-            Time.timeScale = 0; // pause game
-            // TODO WIN GAME
-            Debug.Log("WIN GAME");
+            Time.timeScale = 0;
+            m_GameHudManager.ShowWinScreen();
         }
+        m_GameHudManager.NotifyTimer(m_TimerToSuiver);
     }
 
 
