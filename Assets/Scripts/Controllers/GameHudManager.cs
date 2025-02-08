@@ -16,6 +16,7 @@ public class GameHudManager : MonoBehaviour
 
     [SerializeField] private GameObject m_GameOverScreen;
     [SerializeField] private GameObject m_WinScreen;
+    [SerializeField] private GameObject m_PauseMenuScreen;
 
     [SerializeField] private AudioSource m_AudioGame;
     [SerializeField] private AudioSource m_AudioGameOver;
@@ -26,6 +27,15 @@ public class GameHudManager : MonoBehaviour
     private void Start()
     {
         m_SandwichHP.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape)) 
+        {
+            if(m_PauseMenuScreen.activeSelf) OnResumeGame();
+            else ShowPauseScreen();
+        }
     }
 
     public void NotifyQuest1GotHam() 
@@ -72,5 +82,17 @@ public class GameHudManager : MonoBehaviour
         m_AudioGame.Stop();
         m_AudioWin.Play();
         m_WinScreen.SetActive(true);
+    }
+
+    private void ShowPauseScreen()
+    {
+        Time.timeScale = 0; // Stop Game
+        m_PauseMenuScreen.SetActive(true);
+    }
+
+    public void OnResumeGame()
+    {
+        m_PauseMenuScreen.SetActive(false);
+         Time.timeScale = 1; // Resume Game
     }
 }

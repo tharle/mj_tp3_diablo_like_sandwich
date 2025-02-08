@@ -207,6 +207,7 @@ public class PlayerController : MonoBehaviour
 
     private void ActionRunningGame()
     {
+
         m_TimerToSuiver -= Time.deltaTime;
         if(m_TimerToSuiver <= 0)
         {
